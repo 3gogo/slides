@@ -1,11 +1,89 @@
 <div class="slide-layout-title">
-	<h1>Slides</h1>
-	<h2>Presentations with HTML</h2>
+	<h1>Nginx</h1>
+	<h2>前端运维工程师的必备修养</h2>
+</div>
+<hr>
+<div class="slide-layout-title">
+	<h1>Why?</h1>
+	<h2>为什么要懂 nginx</h2>
 </div>
 <hr>
 <div>
-	<h1>Why?</h1>
-	<p>I got fed up with using Keynote and Powerpoint to create and give presentations.  I'm a web developer for pete's sake, can't I do it in HTML?</p>
+	<h1>爆</h1>
+	<h2>炸增长的互联网用户带来了巨大的挑战</h2>
+	<p>截至2019年6月，我国网民规模达8.54亿</p>
+	<p>较2018年底增长2598万</p>
+	<p>---- 中国网信办</p>
+</div>
+<hr>
+<div>
+	<h1>横</h1>
+	<h2>空出世的 nginx 服务器</h2>
+	</br>
+	<p>Nginx是轻量级 Web 服务器中的典型，由俄罗斯人 Igor Sysoev 开发。</p>
+	<p>作为一个十分轻量级的 Web 服务器，Nginx 在俄罗斯访问量很高的 Rambler.ru 网站站点得到使用。</p>
+	<p>在性能方面的优化做得很好，由于 Nginx 支持的是 Poll 内核模型，所以能处理高并发请求，相关报告指出，Nginx 可以处理五万左右的并发请求数。对于其它 Web服务器，当遭到恶意攻击或者用户访问量到达服务器峰值时，服务器的内存和 cpu 被过度消耗，会导致服务器无法响应请求甚至宕机。Nginx 采用的分阶段资源分配技术使得服务器对物理资源的消耗相对低得多，Nginx 官方网站表示服务器只需要几兆的内存就能够维持一万个无活动连接。</p>
+	<p>所以 Nginx 可以有效防御某些服务器攻击。</p>
+</div>
+<hr>
+<div>
+	<h1>迅</h1>
+	<h2>速抢占市场的 nginx</h2>
+	</br>
+	<p>由于其具有高可靠性、低内存消耗以及高并发连接等特点，更因为其开源的特性及灵活的可扩展性，在实际应用中特别是大型 Web
+		应用系统上得到了广泛部署。</p>
+	<p>根据 Netcraft 今年 10 月份最新公布的数据显示：全球活跃网站主流 Web 服务器采用 Nginx 部署量已经上升到了第一位（市场占有率达36%）。</p>
+	</br>
+	<p><img src="/assets/netcraft.png"></p>	
+</div>
+<hr>
+<div>
+	<h1>nginx</h1>
+	<h2>为何高性能？</h2>
+</div>
+<hr>
+<div>
+	<h1>单</h1>
+	<h2>线程的非阻塞 I/O 技术</h2>
+	</br>
+	<p>减少工作进程在磁盘 I/O 上的阻塞延迟。</p>
+</div>
+<hr>
+<div>
+	<h1>多</h1>
+	<h2>路复用以及事件通知（epoll-根据fd上的callback来实现）</h2>
+	</br>
+	<p>当新的任务到达，Nginx 会将这个任务交给服务器中单独的进程。</p>
+	<p>就是使用这个单线程工作进程来高效地处理连接，也正是由于这个工作进程，Nginx 才能应付成千上万的用户请求数。</p>
+</div>
+<hr>
+<div>
+	<h1>模块化</h1>
+	</br>
+	<p>各种操作系统的事件机制成就了 Nginx 的模块化模型，Nginx 于是成为了一款专门
+		用于提高服务器性能的工具。</p>
+	<p>下图展示Nginx 常用模块及其之间的关系：</p>
+	</br>
+	<p><img src="/assets/modules-relationship.png"></p>
+</div>
+<hr>
+<div>
+	<h1>master-slave 模型</h1>
+	</br>
+	<p>可以根据 SMP的特点，来有效减缓 worker 进程在磁盘 I/O 方面的阻塞延迟。</p>
+</div>
+<hr>
+<div>
+	<h1>热部署</h1>
+	</br>
+	<p>热部署是指在不重新搭建服务器的情况下就可以对系统进行升级维护，几乎不会影响用户使用。</p>
+	<p>因此系统启动之后，甚至可以连续运行数月。</p>
+</div>
+<hr>
+<div>
+	<h1>类BSD许可证</h1>
+	</br>
+	<p>利于开发人员的改写扩展。</p>
 </div>
 <hr>
 <div>
