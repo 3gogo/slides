@@ -19,7 +19,6 @@
 <div>
 	<h1>横</h1>
 	<h2>空出世的 nginx 服务器</h2>
-	</br>
 	<p>Nginx是轻量级 Web 服务器中的典型，由俄罗斯人 Igor Sysoev 开发。</p>
 	<p>作为一个十分轻量级的 Web 服务器，Nginx 在俄罗斯访问量很高的 Rambler.ru 网站站点得到使用。</p>
 	<p>在性能方面的优化做得很好，由于 Nginx 支持的是 Poll 内核模型，所以能处理高并发请求，相关报告指出，Nginx 可以处理五万左右的并发请求数。对于其它 Web服务器，当遭到恶意攻击或者用户访问量到达服务器峰值时，服务器的内存和 cpu 被过度消耗，会导致服务器无法响应请求甚至宕机。Nginx 采用的分阶段资源分配技术使得服务器对物理资源的消耗相对低得多，Nginx 官方网站表示服务器只需要几兆的内存就能够维持一万个无活动连接。</p>
@@ -29,7 +28,6 @@
 <div>
 	<h1>迅</h1>
 	<h2>速抢占市场的 nginx</h2>
-	</br>
 	<p>由于其具有高可靠性、低内存消耗以及高并发连接等特点，更因为其开源的特性及灵活的可扩展性，在实际应用中特别是大型 Web
 		应用系统上得到了广泛部署。</p>
 	<p>根据 Netcraft 今年 10 月份最新公布的数据显示：全球活跃网站主流 Web 服务器采用 Nginx 部署量已经上升到了第一位（市场占有率达36%）。</p>
@@ -45,14 +43,12 @@
 <div>
 	<h1>单</h1>
 	<h2>线程的非阻塞 I/O 技术</h2>
-	</br>
 	<p>减少工作进程在磁盘 I/O 上的阻塞延迟。</p>
 </div>
 <hr>
 <div>
 	<h1>多</h1>
 	<h2>路复用以及事件通知（epoll-根据fd上的callback来实现）</h2>
-	</br>
 	<p>当新的任务到达，Nginx 会将这个任务交给服务器中单独的进程。</p>
 	<p>就是使用这个单线程工作进程来高效地处理连接，也正是由于这个工作进程，Nginx 才能应付成千上万的用户请求数。</p>
 </div>
@@ -100,81 +96,178 @@
 	<h1>块配置项</h1>
 	</br>
 	<p>
-		<code>
-			events {
-			...
-			}
-		</code>
-	</p>
-	<p>
-		<code>
-			http {
-			...
-			}
-		</code>
-	</p>
-	<p>
-		<code>
-			upstream backend {
-				...
-			}
-		</code>
-	</p>
-	<p>
-		<code>
-			server {
-			...
-			}
-		</code>
-	</p>
-	<p>
-		<code>
-			events {
-			...
-			}
-		</code>
-	</p>
-	<p>
-		<code>
+		<pre style="font-size: 60%;">
+
+	events {
+		worker_connections  1024;
+	}
+
+
+	http {
+		include       mime.types;
+		default_type  application/octet-stream;
+
+		gzip  on;
+
+		server {
+			listen       80;
+			server_name  localhost;
+
 			location / {
-				...
+				root   html;
+				index  index.html index.htm;
 			}
-		</code>
+
+		}
+
+	}
+
+		</pre>
 	</p>
 	<br>
-	<p>块配置项可以嵌套。内层块直接继承外层块，例如，基本配置的例子中，server块里的任意配置都是基于http块里的已有配置的。</p>
+	<p>块配置项可以嵌套。内层块直接继承外层块，例如，上面的例子中，server块里的任意配置都是基于http块里的已有配置的。</p>
 	<p>当内外层块中的配置发生冲突时，如何判断一个指令可以合并还是不可以合并呢？</p>
+</div>
+<hr>
+<div>
+	<h1>指令分类</h1>
 	<br>
-	<p>指令分类：</p>
 	<ol>
 		<li>值指令--对这个指令下存储当时配置的值；</li>
 		<li>动作类指令;</li>
 	</ol>
-	<p>值指令：不同块下可以合并，如root，access_log,gzip;</p>
-	<p>动作类指令：指定行为，不可以合并，如rewrite，proxy_pass...</p>
 	<br>
+	<h2>值指令</h2>
+	<p>不同块下可以合并，如root，access_log,gzip;</p>
+	<br>
+	<h2>动作类指令</h2>
+	<p>指定行为，不可以合并，如rewrite，proxy_pass...</p>
+	<br>
+	<h2>指令配置覆盖规则</h2>
 	<p>如果是值指令则遵从向上覆盖的继承规则。</p>
-	<p>动作指令一般是不可以合并的，当然我们也可以通过源码可以判断出来这个指令是什么类型的指令。</p>
-	<p><a href="https://blog.csdn.net/Edidaughter/article/details/109631677">参考博客</a></p>
+	<p>动作指令一般是不可以合并的，当然我们也可以通过源码可以判断出来这个指令是什么类型的指令。<!-- <a href="https://blog.csdn.net/Edidaughter/article/details/109631677">[例子传送门]</a> --></p>
 </div>
 <hr>
 <div>
 	<h1>Nginx 的配置</h1>
 	<h2>location</h2>
-	</br>
 	<p>语法：location [=|~|~*|^~|@] /uri/ {...}</p>
 	<p>配置块：server</p>
-	<p>@表示仅用于Nginx服务内部请求之间的重定向，带有@的location不直接处理用户请求。</p>
+	<p>location会尝试根据用户请求中的URI来匹配上面的/uri表达式，如果可以匹配，就选择location{}块中的配置来处理用户请求。</p>
+	<h2>语法详解</h2>
+	<p>=      #进行普通字符精确匹配</p>
+	<p>~      #波浪线表示执行一个正则匹配，区分大小写</p>
+	<p>~*     #表示执行一个正则匹配，不区分大小写</p>
+	<p>^~	  #表示如果该符号后面的字符是最佳匹配，采用该规则，不再进行后续的查找。</p>
+	<p>@	  #表示仅用于Nginx服务内部请求之间的重定向，带有@的location不直接处理用户请求。</p>
+	<h2>匹配过程</h2>
+	<p>对请求的url序列化。</p>
+	<p>例如，对%xx等字符进行解码，去除url中多个相连的/，解析url中的.，..等。这一步是匹配的前置工作。</p>
+	<p>location有两种表示形式，一种是使用前缀字符，一种是使用正则。如果是正则的话，前面有~或~*修饰符。</p>
+	<p>具体的匹配过程如下：</p>
+	
+	<ul>
+		<li>首先先检查使用前缀字符定义的location，选择最长匹配的项并记录下来。</li>
+		<li>如果找到了精确匹配的location，也就是使用了=修饰符的location，结束查找，使用它的配置。</li>
+		<li>然后按顺序查找使用正则定义的location，如果匹配则停止查找，使用它定义的配置。</li>
+		<li>如果没有匹配的正则location，则使用前面记录的最长匹配前缀字符location。</li>
+	</ul>
+	<h2>location优先级说明</h2>
+	<p>在nginx的location和配置中location的顺序没有太大关系。正location表达式的类型有关。相同类型的表达式，字符串长的会优先匹配。</p>
+	<p>以下是按优先级排列说明：</p>
+	<ul>
+		<li>第一优先级：等号类型（=）的优先级最高。一旦匹配成功，则不再查找其他匹配项。</li>
+		<li>第二优先级：^~类型表达式。一旦匹配成功，则不再查找其他匹配项。</li>
+		<li>第三优先级：正则表达式类型（~ ~*）的优先级次之。如果有多个location的正则能匹配的话，则使用正则表达式最长的那个。</li>
+		<li>第四优先级：常规字符串匹配类型。按前缀匹配。</li>
+	</ul>
+	<h2>示例</h2>
+	<p>假如我们有下面的一段配置文件：</p>
 	<p>
-		<a href="https://cloud.tencent.com/developer/article/1631087">location会尝试根据用户请求中的URI来匹配上面的</a>
+		<pre style="font-size: 60%;">
+	location = / {
+		[ configuration A ]
+	}
+
+	location / {
+		[ configuration B ]
+	}
+
+	location /user/ {
+		[ configuration C ]
+	}
+
+	location ^~ /images/ {
+		[ configuration D ]
+	}
+
+	location ~* \.(gif|jpg|jpeg)$ {
+		[ configuration E ]
+	}
+			
+		</pre>
 	</p>
+	
+	<pre style="font-size: 60%;">
+	请求匹配示例
+	/ -> configuration [ABCDE]?
+	/index.html -> configuration [ABCDE]?
+	/user/index.html -> configuration [ABCDE]?
+	/images/1.jpg -> configuration [ABCDE]?
+	/documents/1.jpg -> configuration [ABCDE]?
+
+	</pre>
+	<p>答案揭晓</p>
+	<p>答案揭晓</p>
+	<p>答案揭晓</p>
+	<p>答案揭晓</p>
+	<p>答案揭晓</p>
+	<p>答案揭晓</p>
+	<p>答案揭晓</p>
+	<p>答案揭晓</p>
+	<p>答案揭晓</p>
+	<p>答案揭晓</p>
+	<p>答案揭晓</p>
+	<p>答案揭晓</p>
+	<p>答案揭晓</p>
+	<p>答案揭晓</p>
+	<p>答案揭晓</p>
+	<pre style="font-size: 60%;">
+	请求匹配示例
+	/ -> configuration A
+	/index.html -> configuration B
+	/user/index.html -> configuration C
+	/images/1.jpg -> configuration D
+	/documents/1.jpg -> configuration E
+
+	</pre>
+
+
 	<p>以上各种匹配方式中，都只能表达为“如果匹配...则...”。如果需要表达“如果不匹配...则...”就很难直接做到。有一种解决方法是在最后一个location中使用/作为参数，它会匹配所有的HTTP请求，这样就可以表示如果不能匹配到前面的所有location，则由“/”这个location处理。</p>
+</div>
+<hr>
+<div>
+	<h1>Nginx 的配置</h1>
+	<h2>rewrite</h2>
+	<p>语法：rewrite regex replacement [flag];</p>
+	<p>rewrite的含义：该指令是实现URL重写的指令。</p>
+	<p>regex的含义：用于匹配URI的正则表达式。</p>
+	<p>replacement：将regex正则匹配到的内容替换成 replacement。</p>
+	<p>flag:</p>
+	<ul>
+		<li>last: 本条规则匹配完成后，继续向下匹配新的location URI 规则。(不常用)</li>
+		<li>break: 本条规则匹配完成即终止，不再匹配后面的任何规则(不常用)。</li>
+		<li>redirect: 返回302临时重定向，浏览器地址会显示跳转新的URL地址。</li>
+		<li>permanent: 返回301永久重定向。浏览器地址会显示跳转新的URL地址。</li>
+	</ul>
+	<p>
+		<a href="https://www.cnblogs.com/tugenhua0707/p/10798762.html#_labe1">rewrite 详解</a>
+	</p>
 </div>
 <hr>
 <div>
 	<h1>文件路径的定义</h1>
 	<h2>root</h2>
-	</br>
 	<p>语法：root path</p>
 	<p>默认：root html</p>
 	<p>配置块：http、server、location、if</p>
@@ -192,143 +285,229 @@
 <div>
 	<h1>文件路径的定义</h1>
 	<h2>alias</h2>
-	</br>
 	<p>语法：root path</p>
 	<p>配置块：location</p>
 	<p>alias也是用来设置文件资源路径的，它与root的不同点主要在于如何解读紧跟location后面的uri参数，这将会致使alias与root以不同的方式将用户请求映射到真正的磁盘文件上。例如，如果有一个请求的URI是/conf/nginx.conf，而用户实际想访问的文件在/usr/local/nginx/conf/nginx.conf，</p>
 	<p>那么想要使用alias来进行设置的话，可以采用如下方法:</p>
 	<p>
-		<em>
-		location /conf {  
-			alias /usr/local/nginx/conf/;      
-		}
-		</em>
+	<pre>
+	location /conf {  
+		alias /usr/local/nginx/conf/;      
+	}
+	</pre>
 	</p>
 	<p>如果用root设置，那么语句如下所示：</p>
 	<p>
-		<em>
-		location /conf {  
-			root /usr/local/nginx/;          
-	    }
-		</em>
+	<pre>
+	location /conf {  
+		root /usr/local/nginx/;          
+	}
+	</pre>
 	</p>
 	<p>使用alias时，在URI向实际文件路径的映射过程中，已经把location后配置的/conf这部分字符串丢弃掉，因此，/conf/nginx.conf请求将根据alias path映射为path/nginx.conf。root则不然，它会根据完整的URI请求来映射，因此，/conf/nginx.conf请求会根据root path映射为path/conf/nginx.conf。这也是root可以放置到http、server、location或if块中，而alias只能放置到location块中的原因。</p>
 	<p> alias后面还可以添加正则表达式，例如：</p>
+	<pre>
+	location ~ ^/test/(\w+)\.(\w+)$ {  
+		alias /usr/local/nginx/$2/$1.$2;  
+	}
+	</pre>
+	<p>这样，请求在访问/test/nginx.conf时，Nginx会返回/usr/local/nginx/conf/nginx.conf 文件中的内容。</p>
+</div>
+<hr>
+<div>
+	<h1>Nginx 开发配置</h1>
+	<h2>最佳实践</h2>
+	<p>假设 Nginx 的主配置文件是 <em>/etc/nginx/nginx.conf</em></p>
+	<p> 为了使 Nginx 配置更易于维护，建议为每个服务（域名）创建一个单独的配置文件。 每一个独立的 Nginx 服务配置文件都必须以 .conf 结尾，并存储在 /etc/nginx/conf.d 目录 中。</p>
+	<p>你可以根据需求，创建任意多个独立的配置文件。 独立的配置文件，建议遵循以下命名约定，比如你的域名是 kaifazhinan.com，那么你的配置 文件的应该是这样的 </p>
+	<p><em>/etc/nginx/conf.d/hotelserver.com.conf</em></p>
+	<p>如果你在一个服务器中部署 多个服务，当然你也可以在文件名中加上 Nginx 转发的端口号，比 如</p>
+	<p><em>hotelserver.com.3000.conf</em></p>
+	<p>这样做看起来会更加友好。 如果你的配置中有很多重复的代码，那么建议你创建一个 /etc/nginx/snippets 文件夹，在这 里面存放所有会被复用的代码块，然后在各个需要用到的 Nginx 的配置文件中引用进去，这样 可以更方便管理和修改。</p>
+	<p>Nginx 日志文件（access.log 和 error.log ）位于 /var/log/nginx/ 目录中。建议为每个独立 的服务配置不同的访问权限和错误日志文件，这样查找错误时，会更加方便快捷。 </p>
+	<p>你可以将要部署的代码文件，存储在任何你想的位置，但是一般推荐存放在下列位置中的其中 一个：</p>
+	<br>
+	<ul>
+		<li><em> /home/&lt;user_name&gt;/ <site_name&gt;</site_name&gt;</em></li>
+		<li><em> /var/www/&lt;site_name&gt;</em></li>
+		<li><em> /var/www/html/&lt;site_name&gt;</em></li>
+		<li><em> /opt/&lt;site_name&gt;</em></li>
+		<li><em> /usr/share/nginx/html</em></li>
+	</ul>
+	<br>
+	<!-- <p><a href="https://github.com/h5bp/server-configs-nginx">传送门</a></p> -->
+</div>
+<hr>
+<div>
+	<h1>Nginx 前端应用场景</h1>
+</div>
+<hr>
+<div>
+	<h1>vue 路由</h1>
+	<h2>history mode</h2>
+	<p>先了解一下什么是<a href="https://router.vuejs.org/zh/guide/essentials/history-mode.html#html5-history-%E6%A8%A1%E5%BC%8F">history mode</a></p>
+	<p>try_files 指令</p>
+	<p></p>
+	<br>
+	<p>配置效果80端口：</p>
+	<br>
+	<p><img src="/assets/80conf.png"></p>
+	<br>
+	<p><img src="/assets/80home.png"></p>
+	<br>
+	<p><img src="/assets/80user.png"></p>
+	<br>
+	<p>配置效果81端口：</p>
+	<br>
+	<p><img src="/assets/81conf.png"></p>
+	<br>
+	<p><img src="/assets/81home.png"></p>
+	<br>
+	<p><img src="/assets/81user.png"></p>
+</div>
+<hr>
+<div>
+	<h1>gzip 压缩</h1>
+	<!-- <h2></h2> -->
+	<br>
+	<p>看一下压缩前后对比</p>
+	<p>压缩：</p>
+	<br>
+	<p><img src="/assets/gzip-compress-html.png"></p>
+	<br>
+	<p><img src="/assets/gzip-compress-network.png"></p>
+	<br>
+	<p>未压缩：</p>
+	<br>
+	<p><img src="/assets/gzip-uncompress-html.png"></p>
+	<br>
+	<p><img src="/assets/gzip-uncompress-network.png"></p>
+</div>
+<hr>
+<div>
+	<h1>gzip 配置</h1>
+	<h2>代码详解</h2>
+	
 	<p>
-		<em>
-		location ~ ^/test/(\w+)\.(\w+)$ {  
-			alias /usr/local/nginx/$2/$1.$2;  
-		}
-		</em>
+		<pre style="font-size: 60%;">
+# ----------------------------------------------------------------------
+# | Compression                                                        |
+# ----------------------------------------------------------------------
+
+# 启用gzip压缩。
+# 默认：关闭
+gzip on;
+
+# 压缩级别（1-9）。
+# 5是大小和CPU使用率之间的完美折衷，提供了大约75％
+# 减少大多数ASCII文件（几乎与级别9相同）。
+# 默认值：1
+gzip_comp_level 5;
+
+# 不要压缩任何已经很小并且不太可能收缩的东西
+# 全部（默认为20个字节，这很糟糕，因为通常会导致
+# gzip后更大的文件）。
+# 默认：20
+gzip_min_length 256;
+
+# 甚至为代理的连接压缩数据，
+# 由“ Via”标头标识。
+# 默认：关闭
+gzip_proxied any;
+
+# 告诉代理同时缓存资源的压缩版本和常规版本
+# 每当客户端的Accept-Encoding功能标头变化时；
+# 避免了不支持gzip的客户端（这种情况极为罕见）的问题
+# 今天）如果代理提供给他们压缩版本，则会显示乱码。
+# 默认：关闭
+gzip_vary on;
+
+# 压缩所有标有以下MIME类型之一的输出。
+# `text / html`总是由gzip模块压缩。
+# Default: text/html
+gzip_types
+  application/atom+xml
+  application/geo+json
+  application/javascript
+  application/x-javascript
+  application/json
+  application/ld+json
+  application/manifest+json
+  application/rdf+xml
+  application/rss+xml
+  application/vnd.ms-fontobject
+  application/wasm
+  application/x-web-app-manifest+json
+  application/xhtml+xml
+  application/xml
+  font/eot
+  font/otf
+  font/ttf
+  image/bmp
+  image/svg+xml
+  text/cache-manifest
+  text/calendar
+  text/css
+  text/javascript
+  text/markdown
+  text/plain
+  text/xml
+  text/vcard
+  text/vnd.rim.location.xloc
+  text/vtt
+  text/x-component
+  text/x-cross-domain-policy;
+		</pre>
 	</p>
-	<p>这样，请求在访问/test/nginx.conf时，Nginx会返回/usr/local/nginx/conf/nginx.conf文件中的内容。</p>
 </div>
 <hr>
 <div>
-	<h1>Yes</h1>
-	<p>So, I made a simple presentation framework for the web.  You're looking at it.</p>
+	<h1>解决跨域请求问题</h1>
+	<h2>反向代理解决跨域</h2>
+	<h3>理解地址重写与地址转发的含义</h3>
+	<br>
+	<p>地址重写与地址转发是两个不同的概念。</p>
+	<p>地址重写 是为了实现地址的标准化，比如我们可以在地址栏中中输入 www.baidu.com. 我们也可以输入 www.baidu.cn. 最后都会被重写到 www.baidu.com 上。浏览器的地址栏也会显示www.baidu.com。</p>
+	<p>地址转发：它是指在网络数据传输过程中数据分组到达路由器或桥接器后，该设备通过检查分组地址并将数据转发到最近的局域网的过程。</p>
+	<br>
+	<p>因此地址重写和地址转发有以下不同点：</p>
+	<br>
+	<ol>
+		<li>地址重写会改变浏览器中的地址，使之变成重写成浏览器最新的地址。而地址转发他是不会改变浏览器的地址的。</li>
+		<li>地址重写会产生两次请求，而地址转发只会有一次请求。</li>
+		<li>地址转发一般发生在同一站点项目内部，而地址重写且不受限制。</li>
+		<li>地址转发的速度比地址重定向快。</li>
+	</ol>
+	<p>使用地址转发可以通过请求源地址的方式把请求转发到其他源服务，实现跨域访问。</p>
+	<br>
+	<h2>服务器配置解决跨域</h2>
+	<h3>解决方案</h3>
+	<pre>
+	location / {  
+		add_header Access-Control-Allow-Origin *;
+		add_header Access-Control-Allow-Methods 'GET, POST, OPTIONS';
+		add_header Access-Control-Allow-Headers 'DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization';
+	
+		if ($request_method = 'OPTIONS') {
+			return 204;
+		}
+	} 
+	</pre>
+	<h3>解释</h3>
+	<p>Access-Control-Allow-Origin</p>
+	<p>服务器默认是不被允许跨域的。给Nginx服务器配置`Access-Control-Allow-Origin *`后，表示服务器可以接受所有的请求源（Origin）,即接受所有跨域的请求。</p>
+	<br>
+	<p>Access-Control-Allow-Headers 是为了防止出现以下错误：</p>
+	<pre><code>Request header field Content-Type is not allowed by Access-Control-Allow-Headers in preflight response.</code></pre>
+	<p>这个错误表示当前请求Content-Type的值不被支持。其实是我们发起了"application/json"的类型请求导致的。这里涉及到一个概念：预检请求（preflight request）,请看下面"预检请求"的介绍。</p>
+	<br>
+	<p>Access-Control-Allow-Methods 是为了防止出现以下错误：</p>
+	<pre><code>Content-Type is not allowed by Access-Control-Allow-Headers in preflight response.</code></pre>
+	<br>
+	<p>给OPTIONS 添加 204的返回，是为了处理在发送POST请求时Nginx依然拒绝访问的错误。</p>
+	<p>发送"预检请求"时，需要用到方法 OPTIONS ,所以服务器需要允许该方法。</p>
 </div>
 <hr>
 <div>
-	<h1>Simple</h1>
-	<p>You just make slides in plain old HTML, and the framework will present them for you.  You can create themes and layouts with CSS.</p>
-</div>
-<hr>
-<div>
-	<h1>Examples</h1>
-	<p>The next few slides show some examples of very simple layouts you might expect to see in a slide presentation.</p>
-</div>
-<hr>
-<div class="slide-layout-title">
-	<h1>Just a Title</h1>
-</div>
-<hr>
-<div class="slide-layout-title">
-	<h1>Title</h1>
-	<h2>With Subtitle</h2>
-</div>
-<hr>
-<div>
-	<h1>Title</h1>
-	<h2>Subtitle</h2>
-	<p>This is a slide with title, subtitle, and some paragraph text. This slide uses a different layout that shifts everything upward to account for the paragraph text.</p>
-</div>
-<hr>
-<div>
-	<h1>Title</h1>
-	<h2>Subtitle and Bullets</h2>
-	<ul>
-		<li>Titles, and paragraph text are just HTML elements</li>
-		<ul>
-			<li>e.g. <code>h1</code>, <code>h2</code>, <code>p</code></li>
-		</ul>
-		<li>Bullets, of course</li>
-		<ul>
-			<li>nest,</li>
-			<ul>
-				<li>as you'd expect</li>
-			</ul>
-		</ul>
-	</ul>
-</div>
-<hr>
-<div>
-	<h1>Links</h1>
-	<p>Since it's HTML, linking is easy, and means you don't have to jump out of Powerpoint or Keynote to view the link.  The back button works, too ... <a href="http://google.com/">try it</a></p>
-</div>
-<hr>
-<div>
-	<h1>More Links</h1>
-	<p>You can link to other slides, too, and the back button will still work like you think it should.  <a href="#11">Try it</a>.</p>
-</div>
-<hr>
-<div>
-	<h1>Layouts</h1>
-	<h2>Just use CSS</h2>
-	<ul>
-		<li>Layouts are just CSS classes</li>
-		<ul>
-			<li>e.g. <code>slide-layout-title</code></li>
-		</ul>
-		<li>There are a few built-in, as you've seen</li>
-		<li>You can define your own</li>
-	</ul>
-</div>
-<hr>
-<div>
-	<h1>Themes</h1>
-	<h2>You guessed it, CSS</h2>
-	<ul>
-		<li>Themes are also CSS classes</li>
-		<li>You're looking at the 'gray' theme right now</li>
-		<li>You can, of course, define your own</li>
-	</ul>
-</div>
-<hr>
-<div>
-	<h1>Transitions</h1>
-	<h2>CSS again!</h2>
-	<ul>
-		<li>Slide transitions are defined using CSS3</li>
-		<li>This presentation uses the 'fade' transition</li>
-		<li>Can be integrated into a theme or mixed-and-matched</li>
-		<li>And yep, you can define your own</li>
-	</ul>
-</div>
-<hr>
-<div>
-	<h1>Mobile</h1>
-	<h2>Landscape, portrait, touch, swipe</h2>
-	<p>It has mobile viewport support in the builtin template and themes, plus touch and swipe event support for navigation.</p>
-</div>
-<hr>
-<div>
-	<h1>Engineered</h1>
-	<h2>MVC, OOCSS, and AMD</h2>
-	<p>Cutting edge tech, packaged for simplicity.  Use it out of the box, or drop in code for your own slide models, views, and controllers.</p>
-</div>
-<hr>
-<div class="slide-layout-title">
-	<h1>Get it</h1>
-	<h2>Now available on <a href="https://github.com/briancavalier/slides">github</a></h2>
+	<h1>分享结束，感谢参与。</h1>
 </div>
